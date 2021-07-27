@@ -12,8 +12,9 @@ type Params = {
 };
 
 export type Token = {access_token: string; expires_in: number; token_type: string};
+type Claims = {iss: string; scope: string; aud: string; exp: number; iat: number; sub?: string};
 
-async function obtainToken(params: Params): Promise<Token> {
+export async function obtainToken(params: Params): Promise<Token> {
   const jwt = encodeJWT(params);
 
   return fetch<Token>(GOOGLE_OAUTH2_URL, {
@@ -27,9 +28,8 @@ async function obtainToken(params: Params): Promise<Token> {
     }),
   });
 }
-type Claims = {iss: string; scope: string; aud: string; exp: number; iat: number; sub?: string};
 
-function encodeJWT({email, scopes, key, ttlMinutes = 60, delegationEmail}: Params): string {
+export function encodeJWT({email, scopes, key, ttlMinutes = 60, delegationEmail}: Params): string {
   const iat = Math.floor(new Date().getTime() / 1000);
   const exp = iat + Math.floor((ttlMinutes * 60 * 1000) / 1000);
   const claims: Claims = {
@@ -72,5 +72,3 @@ async function fetch<T>(url: string, options: Parameters<typeof nodeFetch>[1]): 
 
   return res.json();
 }
-
-export {obtainToken, encodeJWT};
