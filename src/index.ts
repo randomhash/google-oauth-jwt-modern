@@ -12,9 +12,24 @@ type Params = {
 };
 
 export type Token = {access_token: string; expires_in: number; token_type: string};
+
+async function obtainToken(params: Params): Promise<Token> {
+  const jwt = encodeJWT(params);
+
+  return fetch<Token>(GOOGLE_OAUTH2_URL, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'post',
+    body: JSON.stringify({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt,
+    }),
+  });
+}
 type Claims = {iss: string; scope: string; aud: string; exp: number; iat: number; sub?: string};
 
-export function encodeJWT({email, scopes, key, ttlMinutes = 60, delegationEmail}: Params): string {
+function encodeJWT({email, scopes, key, ttlMinutes = 60, delegationEmail}: Params): string {
   const iat = Math.floor(new Date().getTime() / 1000);
   const exp = iat + Math.floor((ttlMinutes * 60 * 1000) / 1000);
   const claims: Claims = {
@@ -52,23 +67,10 @@ function signJWT(key: string, unsignedJWT: string): string {
   }
 }
 
-export async function obtainToken(params: Params): Promise<Token> {
-  const jwt = encodeJWT(params);
-
-  return fetch<Token>(GOOGLE_OAUTH2_URL, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'post',
-    body: JSON.stringify({
-      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-      assertion: jwt,
-    }),
-  });
-}
-
 async function fetch<T>(url: string, options: Parameters<typeof nodeFetch>[1]): Promise<T> {
   const res = await nodeFetch(url, options);
 
   return res.json();
 }
+
+export {obtainToken, encodeJWT};
