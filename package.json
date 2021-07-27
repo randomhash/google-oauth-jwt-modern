@@ -1,6 +1,6 @@
 {
   "name": "google-oauth-jwt-modern",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Google OAuth 2.0 authentication for server-to-server. Obtain token.",
   "main": "index.js",
   "repository": {
@@ -19,7 +19,9 @@
   "babel": {
     "extends": "@shelf/babel-config/backend"
   },
-  "files": ["lib/**/*"],
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
     "@babel/cli": "7.14.8",
     "@babel/core": "7.14.8",
@@ -42,5 +44,8 @@
   "homepage": "https://github.com/randomhash/google-oauth-jwt-modern#readme",
   "dependencies": {
     "node-fetch": "2.6.1"
+  },
+  "engines": {
+    "node": ">=14"
   }
 }
