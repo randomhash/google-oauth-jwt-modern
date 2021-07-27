@@ -2,7 +2,7 @@
   "name": "google-oauth-jwt-modern",
   "version": "1.0.4",
   "description": "Google OAuth 2.0 authentication for server-to-server. Obtain token.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/randomhash/google-oauth-jwt-modern.git"
